@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+  <title>Webpack 打包含动态加载的类库 | Scarletsky</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="webpack,">
+  
+
+  <meta name="description" content="前言在编写库的时候，我们有时候会希望按需加载某些依赖，例如如果代码的运行环境不支持某些功能的话，就加载相关的 Polyfill 。webpack 作为当前最流行的打包工具，早已支持动态加载的功能了。本文将讨论一种用 webpack 打包含动态加载的类库的方法。注意，本文是写给类库作者看的，如果读者写的是应用，那就没有必要往下看了。 示例类库// my-lib.jsclass MyLib &amp;#123">
+<meta name="keywords" content="webpack">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Webpack 打包含动态加载的类库">
+<meta property="og:url" content="http://scarletsky.github.io/2019/02/19/webpack-bundling-libraries-with-dynamic-imports/index.html">
+<meta property="og:site_name" content="Scarletsky">
+<meta property="og:description" content="前言在编写库的时候，我们有时候会希望按需加载某些依赖，例如如果代码的运行环境不支持某些功能的话，就加载相关的 Polyfill 。webpack 作为当前最流行的打包工具，早已支持动态加载的功能了。本文将讨论一种用 webpack 打包含动态加载的类库的方法。注意，本文是写给类库作者看的，如果读者写的是应用，那就没有必要往下看了。 示例类库// my-lib.jsclass MyLib &amp;#123">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-02-21T02:38:19.910Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Webpack 打包含动态加载的类库">
+<meta name="twitter:description" content="前言在编写库的时候，我们有时候会希望按需加载某些依赖，例如如果代码的运行环境不支持某些功能的话，就加载相关的 Polyfill 。webpack 作为当前最流行的打包工具，早已支持动态加载的功能了。本文将讨论一种用 webpack 打包含动态加载的类库的方法。注意，本文是写给类库作者看的，如果读者写的是应用，那就没有必要往下看了。 示例类库// my-lib.jsclass MyLib &amp;#123">
+
+  
+
+  
+    <link rel="icon" href="/favicon.ico">
+  
+
+  <link href="/css/styles.css?v=c114cbeddx" rel="stylesheet">
+
+
+  
+    <link rel="stylesheet" href="/css/personal-style.css">
+  
+
+  
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-40690820-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
+
+
+  
+
+  
+
+
+  
+    <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.3.0/css/font-awesome.min.css">
+  
+
+</head>
+</html>
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">盒子</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a class="CIRCLE" href="/archives/" rel="noopener noreferrer" target="_self">
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a class="CIRCLE" href="/category/" rel="noopener noreferrer" target="_self">
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a class="CIRCLE" href="/tag/" rel="noopener noreferrer" target="_self">
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a class="CIRCLE" href="/about/" rel="noopener noreferrer" target="_self">
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a class="CIRCLE" href="/atom.xml" rel="noopener noreferrer" target="_blank">
+            RSS
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a class="CIRCLE" href="/search/" rel="noopener noreferrer" target="_self">
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#示例类库"><span class="toc-text">示例类库</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#问题"><span class="toc-text">问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#解决方案"><span class="toc-text">解决方案</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#方案一：由应用层处理"><span class="toc-text">方案一：由应用层处理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#方案二：由类库处理"><span class="toc-text">方案二：由类库处理</span></a></li></ol></li></ol>
+  </div>
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-webpack-bundling-libraries-with-dynamic-imports" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">Webpack 打包含动态加载的类库</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2019.02.19</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>Scarletsky</span>
+        </span>
+      
+
+      
+
+
+      
+        <span>
+          <i class="icon-comment"></i>
+          <a href="http://scarletsky.github.io/2019/02/19/webpack-bundling-libraries-with-dynamic-imports/#disqus_thread"></a>
+        </span>
+      
+
+      
+      <i class="fa fa-eye"></i> 
+        <span id="busuanzi_container_page_pv">
+           &nbsp热度 <span id="busuanzi_value_page_pv">
+           <i class="fa fa-spinner fa-spin"></i></span>℃
+        </span>
+      
+      
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>在编写库的时候，我们有时候会希望按需加载某些依赖，例如如果代码的运行环境不支持某些功能的话，就加载相关的 Polyfill 。<br>webpack 作为当前最流行的打包工具，早已支持动态加载的功能了。<br>本文将讨论一种用 webpack 打包含动态加载的类库的方法。<br><strong>注意，本文是写给类库作者看的，如果读者写的是应用，那就没有必要往下看了。</strong></p>
+<h2 id="示例类库"><a href="#示例类库" class="headerlink" title="示例类库"></a>示例类库</h2><figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// my-lib.js</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyLib</span> </span>&#123;</span><br><span class="line">    loadDeps() &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function">(<span class="params">resolve, reject</span>) =&gt;</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> (global.TextDecoder === <span class="literal">undefined</span>) &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="built_in">Promise</span>.all([</span><br><span class="line">                    <span class="keyword">import</span>(<span class="string">'./deps/text-encoding'</span>),</span><br><span class="line">                    <span class="keyword">import</span>(<span class="string">'./deps/other-dep.js'</span>),</span><br><span class="line">                    <span class="keyword">import</span>(<span class="string">'./deps/another-dep.js'</span>),</span><br><span class="line">                ]).then(resolve).catch(reject);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                resolve();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    initialize() &#123;</span><br><span class="line">        <span class="keyword">this</span>.decoder = <span class="keyword">new</span> TextDecoder();</span><br><span class="line">        <span class="comment">// ...</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这个类库中有个 <code>loadDeps</code> 方法，会根据运行环境检测 <code>TextDecoder</code> 是否存在，如果不存在就会去加载依赖，这些依赖是在本地目录中。<br>当我们把类库发布到 npm 之后，我们就会这么使用它：</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// app.js</span></span><br><span class="line"><span class="keyword">import</span> MyLib <span class="keyword">from</span> <span class="string">'my-lib'</span>;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">App</span> </span>&#123;</span><br><span class="line">    <span class="keyword">constructor</span>() &#123;</span><br><span class="line">        <span class="keyword">this</span>.myLib = <span class="keyword">new</span> MyLib();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> app = <span class="keyword">new</span> App();</span><br><span class="line">app.myLib.loadDeps().then(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    app.myLib.initialize();</span><br><span class="line">    <span class="built_in">console</span>.log(app.myLib.decoder);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>这样，我们的类库无论在什么环境都能使用到 <code>TextDecoder</code> 了。</p>
+<p><strong>但，真的会这么顺利吗？</strong></p>
+<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>当我们发布到 npm 仓库之前，我们会先用 Webpack 构建项目，这时候 webpack 就会分析文件中的依赖路径，把依赖文件生成到 <code>output.path</code> 中，同时 <code>import()</code>方法就已经变成 webpack 内部的方法了，依赖的路径也变成 <code>output.publicPath</code> 相关的了。</p>
+<p>假设我们的 webpack 配置是这样的：</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// webpack.config.js</span></span><br><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">    output: &#123;</span><br><span class="line">        filename: <span class="string">'index.js'</span>,</span><br><span class="line">        chunkFilename: <span class="string">'[name].js'</span>,</span><br><span class="line">        path: <span class="string">'dist/'</span>,</span><br><span class="line">        publicPath: <span class="string">'/'</span>,</span><br><span class="line">        libraryTarget: <span class="string">'umd'</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>然后输出了这些文件：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">// webpack output</span><br><span class="line">Built at: 02/19/2019 5:08:41 PM</span><br><span class="line">  Asset      Size  Chunks             Chunk Names</span><br><span class="line">   1.js  79 bytes       1  [emitted]</span><br><span class="line">   2.js  79 bytes       2  [emitted]</span><br><span class="line">   3.js  79 bytes       3  [emitted]</span><br><span class="line">index.js   144 KiB       0  [emitted]  main</span><br><span class="line">Entrypoint main = index.js</span><br></pre></td></tr></table></figure>
+<p>那么当应用层调用 <code>app.myLib.loadDeps()</code> 的时候会加载依赖的路径会是怎样的呢？<br>猜对了，浏览器会尝试加载这些路径：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">/1.js</span><br><span class="line">/2.js</span><br><span class="line">/3.js</span><br></pre></td></tr></table></figure>
+<p>但是结果呢？当然是 <code>404</code> 了。因为网站的根目录没有这些文件呀，除非你把这些文件复制到网站根目录。<br>同样道理，如果 <code>publicPath</code> 是相对路径的话(假设是 <code>&#39;&#39;</code>)，那么请求依赖的路径就会相对于当前的 URL 了，即如果当前 URL 是 <code>/topics/:uid</code>，那请求的路径就会是 <code>/topics/:uid/1.js</code>。除非当前目录下有这些依赖，不然结果还是 <code>404</code>。<br>当然，我们还可以修改服务端配置，把 <code>/1.js</code> 和 <code>**/1.js</code> 都指向 <code>/path/to/project/node_modules/my-lib/dist/1.js</code>。<br>对应用层来说，为了一个库而改服务器配置就显得太麻烦了。<br>对一个类库来说，它应该管理好自己的依赖，不应该让应用层甚至是服务器端来配合。</p>
+<h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><p>我们需要解决这个路径问题，既要保证结果正确，又要方便开发。<br>很明显，这个问题是因为 webpack 打包的时候处理了 <code>import()</code> 导致的，如果我们不在编译时处理，而是运行时处理，这不就可以达到目的了吗？</p>
+<p>先来准备一下 <code>dist/</code> 的目录结构， 修改 webpack 的配置：</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> CopyWebpackPlugin = <span class="built_in">require</span>(<span class="string">'copy-webpack-plugin'</span>);</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">    output: &#123; ... &#125;,</span><br><span class="line">    plugins: [</span><br><span class="line">       <span class="keyword">new</span> CopyWebpackPlugin([&#123;</span><br><span class="line">           <span class="keyword">from</span>: <span class="string">'src/deps/'</span>,</span><br><span class="line">           to: <span class="string">'.'</span></span><br><span class="line">       &#125;]) </span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>CopyWebpackPlugin</code> 会把 <code>src/deps/</code> 中的文件复制到 <code>dist/</code> 目录中，这时候 <code>dist/</code> 就会变成：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">dist</span><br><span class="line">├── 1.js</span><br><span class="line">├── 2.js</span><br><span class="line">├── 3.js</span><br><span class="line">├── text-encoding.js</span><br><span class="line">├── other-dep.js</span><br><span class="line">├── another-dep.js</span><br><span class="line">└── index.js</span><br></pre></td></tr></table></figure>
+<p>下一步就是让 webpack 不解析 <code>import()</code> 了，这里有两种做法：</p>
+<h3 id="方案一：由应用层处理"><a href="#方案一：由应用层处理" class="headerlink" title="方案一：由应用层处理"></a>方案一：由应用层处理</h3><p>这个方案很容易实现，只需要让应用层来调用 <code>import()</code> 就可以了。</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// my-lib.js</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyLib</span> </span>&#123;</span><br><span class="line">    <span class="keyword">constructor</span>(options) &#123;</span><br><span class="line">        <span class="keyword">this</span>.onLoadDeps = options.onLoadDeps || <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    loadDeps() &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function">(<span class="params">resolve, reject</span>) =&gt;</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> (global.TextDecoder === <span class="literal">undefined</span>) &#123;</span><br><span class="line">                <span class="keyword">if</span> (<span class="keyword">this</span>.onLoadDeps) &#123;</span><br><span class="line">                   <span class="keyword">this</span>.onLoadDeps().then(resolve).catch(reject);</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    <span class="built_in">Promise</span>.all([</span><br><span class="line">                        <span class="keyword">import</span>(<span class="string">'./deps/text-encoding'</span>),</span><br><span class="line">                        <span class="keyword">import</span>(<span class="string">'./deps/other-dep.js'</span>),</span><br><span class="line">                        <span class="keyword">import</span>(<span class="string">'./deps/another-dep.js'</span>),</span><br><span class="line">                    ]).then(resolve).catch(reject);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                resolve();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// app.js</span></span><br><span class="line"><span class="keyword">import</span> MyLib <span class="keyword">from</span> <span class="string">'my-lib'</span>;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">App</span> </span>&#123;</span><br><span class="line">    <span class="keyword">constructor</span>() &#123;</span><br><span class="line">        <span class="keyword">this</span>.myLib = <span class="keyword">new</span> MyLib(&#123;</span><br><span class="line">            onLoadDeps: <span class="function"><span class="params">()</span> =&gt;</span> <span class="built_in">Promise</span>.all([</span><br><span class="line">                <span class="keyword">import</span>(<span class="string">'my-lib/dist/text-encoding'</span>),</span><br><span class="line">                <span class="keyword">import</span>(<span class="string">'my-lib/dist/other-dep.js'</span>),</span><br><span class="line">                <span class="keyword">import</span>(<span class="string">'my-lib/dist/another-dep.js'</span>),</span><br><span class="line">            ]);</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这种做法非常简单，而且在开发环境下也不需要任何处理就能正常运行了。<br>不足之处是如果有多个项目都引用了这个类库的话，那么当类库添加了新的依赖时，所有引用了这个类库的项目都要改动源码。这会是一个比较繁琐的事情。<br>对于这个解决方案，其实还有一个变种，相对来说更加方便：</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// my-lib.js</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyLib</span> </span>&#123;</span><br><span class="line">    <span class="keyword">constructor</span>(options) &#123;</span><br><span class="line">        <span class="keyword">this</span>.importPrefix = options.importPrefix || <span class="string">'./deps'</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    loadDeps() &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function">(<span class="params">resolve, reject</span>) =&gt;</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> (global.TextDecoder === <span class="literal">undefined</span>) &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="built_in">Promise</span>.all([</span><br><span class="line">                    <span class="keyword">import</span>(<span class="keyword">this</span>.importPrefix + <span class="string">'/text-encoding'</span>),</span><br><span class="line">                    <span class="keyword">import</span>(<span class="keyword">this</span>.importPrefix + <span class="string">'/other-dep.js'</span>),</span><br><span class="line">                    <span class="keyword">import</span>(<span class="keyword">this</span>.importPrefix + <span class="string">'/another-dep.js'</span>),</span><br><span class="line">                ]).then(resolve).catch(reject);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                resolve();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// app.js</span></span><br><span class="line"><span class="keyword">import</span> MyLib <span class="keyword">from</span> <span class="string">'my-lib'</span>;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">App</span> </span>&#123;</span><br><span class="line">    <span class="keyword">constructor</span>() &#123;</span><br><span class="line">        <span class="keyword">this</span>.myLib = <span class="keyword">new</span> MyLib(&#123; <span class="attr">importPrefix</span>: <span class="string">'my-lib/dist'</span> &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>注意：这个变种方案有可能会出现 Critical dependency: the request of a dependency is an expression 的报错。</strong></p>
+<h3 id="方案二：由类库处理"><a href="#方案二：由类库处理" class="headerlink" title="方案二：由类库处理"></a>方案二：由类库处理</h3><p>这个方案稍微复杂一点点。<br>想要 webpack 不处理 <code>import()</code>，那么就不能让 webpack 去解析含有 <code>import()</code> 的文件，即需要把含有加载依赖的部分分离到另一个文件中。</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// runtime.js</span></span><br><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">    onLoadDeps: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">Promise</span>.all([</span><br><span class="line">            <span class="keyword">import</span>(<span class="string">'my-lib/dist/text-encoding'</span>),</span><br><span class="line">            <span class="keyword">import</span>(<span class="string">'my-lib/dist/other-dep.js'</span>),</span><br><span class="line">            <span class="keyword">import</span>(<span class="string">'my-lib/dist/another-dep.js'</span>),</span><br><span class="line">        ]);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>注意：因为 webpack 不会解析这个文件，loader 就不会处理这个文件，所以这个文件里面最好使用 Node.js 原生支持的语法。</strong></p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// my-lib.js</span></span><br><span class="line"><span class="keyword">import</span> RUNTIME <span class="keyword">from</span> <span class="string">'./runtime'</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyLib</span> </span>&#123;</span><br><span class="line">    loadDeps() &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function">(<span class="params">resolve, reject</span>) =&gt;</span> &#123;</span><br><span class="line">           <span class="keyword">if</span> (global.TextDecoder === <span class="literal">undefined</span>) &#123;</span><br><span class="line">               RUNTIME.onLoadDeps().then(resolve).catch(reject);</span><br><span class="line">           &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">               resolve();</span><br><span class="line">           &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>然后修改 webpack 配置：</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">    output: &#123; ... &#125;,</span><br><span class="line">    <span class="built_in">module</span>: &#123;</span><br><span class="line">        noParse: <span class="regexp">/src\/runtime/</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">    plugins: [ ... ] </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这样，webpack 在处理 <code>my-lib.js</code> 的时候会把 <code>runtime.js</code> 加载进来，但不会去解析它。所以会得到以下的结果：</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// dist/index.js</span></span><br><span class="line"><span class="comment">/******/</span> ([</span><br><span class="line"><span class="comment">/* 0 */</span></span><br><span class="line"><span class="comment">/***/</span> (<span class="function"><span class="keyword">function</span>(<span class="params">module, exports</span>) </span>&#123;</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">  onLoadDeps: <span class="function"><span class="keyword">function</span> <span class="title">onLoadDeps</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">Promise</span>.all([<span class="keyword">import</span>(<span class="string">'my-lib/dist/text-encoding'</span>), <span class="keyword">import</span>(<span class="string">'my-lib/dist/other-dep.js'</span>), <span class="keyword">import</span>(<span class="string">'my-lib/dist/another-dep.js'</span>)]);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">/***/</span> &#125;),</span><br><span class="line"><span class="comment">/* 1 */</span></span><br><span class="line"><span class="comment">/***/</span> (<span class="function"><span class="keyword">function</span>(<span class="params">module, __webpack_exports__, __webpack_require__</span>) </span>&#123;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ...</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> MyLib =</span><br><span class="line"><span class="comment">/*#__PURE__*/</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">MyLib</span>(<span class="params"></span>) </span>&#123;&#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">var</span> _proto = MyLib.prototype;</span><br><span class="line"></span><br><span class="line">  _proto.loadDeps = <span class="function"><span class="keyword">function</span> <span class="title">loadDeps</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> _this = <span class="keyword">this</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function"><span class="keyword">function</span> (<span class="params">resolve, reject</span>) </span>&#123;</span><br><span class="line">      <span class="keyword">if</span> (global.TextDecoder === <span class="literal">undefined</span>) &#123;</span><br><span class="line">        _runtime__WEBPACK_IMPORTED_MODULE_0___default.a.onLoadDeps().then(resolve).catch(reject);</span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        resolve();</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  _proto.initialize = <span class="function"><span class="keyword">function</span> <span class="title">initialize</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.decoder = <span class="keyword">new</span> TextDecoder(); <span class="comment">// ...</span></span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> MyLib;</span><br><span class="line">&#125;();</span><br><span class="line"></span><br><span class="line"><span class="comment">// ...</span></span><br></pre></td></tr></table></figure>
+<p>如果应用层引用了这个类库，那么 webpack 打包应用的时候就会处理类库中的 <code>import()</code>，这样就和应用层平时的动态加载一样了，上面的问题也就解决了。<br>最后剩下一个问题，那就是在开发环境下，我们也需要测试 <code>runtime.js</code>，但这时候它是 <code>import(&#39;my-lib/dist/xxx&#39;)</code> 的，这个肯定会报 <code>Error: Cannot find module</code> 的错误。<br>这时候可以像方案一那样，用 <code>import(importPrefix + &#39;/text-encoding&#39;)</code> 的方式来解决，也可以利用 <code>NormalModuleReplacementPlugin</code> 来解决。</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// webpack.dev.js</span></span><br><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">    plugins: [</span><br><span class="line">        <span class="keyword">new</span> webpack.NormalModuleReplacementPlugin(<span class="regexp">/my-lib\/dist\/(.*)/</span>, <span class="function"><span class="keyword">function</span> (<span class="params">resource</span>) </span>&#123;</span><br><span class="line">            resource.request = resource.request.replace(<span class="regexp">/my-lib\/dist/</span>, <span class="string">'../src/deps'</span>)</span><br><span class="line">        &#125;),</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这个插件可以改变重定向资源，上面的配置是把 <code>my-lib/dist/*</code> 里面的资源都重定向到 <code>../src/deps</code>。<br>更多详细的用法，可以参考下官方文档 <a href="https://webpack.js.org/plugins/normal-module-replacement-plugin/" target="_blank" rel="noopener">NormalModuleReplacementPlugin</a>。<br><strong>注意：这个插件最好只用在开发环境中。</strong></p>
+<p>这个方案虽然有些繁琐，但最大的优点是可以把依赖管理都交给类库自己处理，不需要应用层干预。就算类库日后改变打包位置（不再是 <code>dist/</code>） 也无需让应用层知道。</p>
+<p>完。</p>
+
+    
+  </div>
+
+</article>
+
+
+   
+  <div class="text-center donation">
+    <div class="inner-donation">
+      <span class="btn-donation">支持一下</span>
+      <div class="donation-body">
+        <div class="tip text-center">扫一扫，支持 scarletsky</div>
+        <ul>
+        
+          <li class="item">
+            
+              <span>微信扫一扫</span>
+            
+            <img src="/images/qr-wechat.png" alt="">
+          </li>
+        
+          <li class="item">
+            
+              <span>支付宝扫一扫</span>
+            
+            <img src="/images/qr-alipay.png" alt="">
+          </li>
+        
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+   
+  <div class="box-prev-next clearfix">
+    <a class="show pull-left" href="/2019/01/10/wireless-remote-debugging-with-safari-on-ios/">
+        <i class="icon icon-angle-left"></i>
+    </a>
+    <a class="hide pull-right" href="/">
+        <i class="icon icon-angle-right"></i>
+    </a>
+  </div>
+
+
+
+
+</div>
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a class="CIRCLE" href="/archives/" rel="noopener noreferrer" target="_self">
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a class="CIRCLE" href="/category/" rel="noopener noreferrer" target="_self">
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a class="CIRCLE" href="/tag/" rel="noopener noreferrer" target="_self">
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a class="CIRCLE" href="/about/" rel="noopener noreferrer" target="_self">
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a class="CIRCLE" href="/atom.xml" rel="noopener noreferrer" target="_blank">
+              RSS
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a class="CIRCLE" href="/search/" rel="noopener noreferrer" target="_self">
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+  <section class="disqus-comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+  </section>
+
+  <script>
+    var disqus_shortname = 'scarletskygithubio';
+    
+    var disqus_url = 'http://scarletsky.github.io/2019/02/19/webpack-bundling-libraries-with-dynamic-imports/';
+    
+    (function(){
+      var dsq = document.createElement('script');
+      dsq.type = 'text/javascript';
+      dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+
+  <script id="dsq-count-scr" src="//scarletskygithubio.disqus.com/count.js" async></script>
+
+
+
+    
+
+    
+    
+
+    
+
+    
+    
+
+    
+
+<!-- Gitalk评论插件通用代码 -->
+<div id="gitalk-container"></div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+<script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<script>
+const gitalk = new Gitalk({
+  clientID: '277317290454635afa73',
+  clientSecret: '78223c859304da5e8d71bfce136d436c6ff95c37',
+  repo: 'blog-comment',
+  owner: 'forsigner',
+  // 在这里设置一下截取前50个字符串, 这是因为 github 对 label 的长度有了要求, 如果超过
+  // 50个字符串则会报错.
+  // id: location.pathname.split('/').pop().substring(0, 49),
+  id: location.pathname,
+  admin: ['forsigner'],
+  // facebook-like distraction free mode
+  distractionFreeMode: false
+})
+gitalk.render('gitalk-container')
+</script>
+<!-- Gitalk代码结束 -->
+
+
+
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>
