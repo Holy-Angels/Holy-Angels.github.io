@@ -1,0 +1,431 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  
+  <url>
+    <loc>http://scarletsky.github.io/2019/02/19/webpack-bundling-libraries-with-dynamic-imports/</loc>
+    
+    <lastmod>2019-02-21T02:38:19.910Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://scarletsky.github.io/2019/01/10/wireless-remote-debugging-with-safari-on-ios/</loc>
+    
+    <lastmod>2019-01-10T14:38:37.344Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://scarletsky.github.io/2017/11/17/how-to-implement-promise-in-javascript/</loc>
+    
+    <lastmod>2017-12-28T02:32:52.272Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://scarletsky.github.io/2017/12/23/write-javascript-document-by-jsdoc/</loc>
+    
+    <lastmod>2017-12-24T06:42:17.968Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://scarletsky.github.io/2017/10/30/the-best-boilerplate-app-is-the-one-you-code-yourself/</loc>
+    
+    <lastmod>2017-11-19T08:01:30.670Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://scarletsky.github.io/2017/05/25/chasing-the-shiny-and-new-in-software/</loc>
+    
+    <lastmod>2017-11-19T06:20:03.837Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://scarletsky.github.io/2017/09/29/org-mode-in-spacemacs/</loc>
+    
+    <lastmod>2017-10-03T08:01:53.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://scarletsky.github.io/2017/08/30/emacs-key-bindings-for-vim-users/</loc>
+    
+    <lastmod>2017-10-01T15:17:20.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://scarletsky.github.io/2017/07/23/glossary-in-3d-development/</loc>
+    
+    <lastmod>2017-08-02T14:17:20.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://scarletsky.github.io/2017/06/30/functional-programming-i-have-learned/</loc>
+    
+    <lastmod>2017-07-04T14:47:21.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://scarletsky.github.io/2017/04/26/client-authentication-in-postgresql/</loc>
+    
+    <lastmod>2017-04-30T07:18:50.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://scarletsky.github.io/2017/03/15/notes-of-postgresql/</loc>
+    
+    <lastmod>2017-03-30T13:56:54.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://scarletsky.github.io/2017/02/18/implement-popover-with-javascript/</loc>
+    
+    <lastmod>2017-02-21T16:22:19.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://scarletsky.github.io/2017/01/30/build-your-own-event-system-in-javascript/</loc>
+    
+    <lastmod>2017-01-31T15:48:25.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://scarletsky.github.io/2016/01/22/spacemacs-usage/</loc>
+    
+    <lastmod>2017-01-10T00:11:07.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://scarletsky.github.io/2016/12/29/tilde-and-caret-in-git/</loc>
+    
+    <lastmod>2016-12-30T12:17:33.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://scarletsky.github.io/2016/11/30/error-handling-in-restful-api/</loc>
+    
+    <lastmod>2016-12-01T14:17:54.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://scarletsky.github.io/2016/10/05/write-unit-tests-for-restful-api-in-nodejs/</loc>
+    
+    <lastmod>2016-10-05T02:22:46.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://scarletsky.github.io/2016/09/11/talking-about-front-end-pagination-implementation-in-spa/</loc>
+    
+    <lastmod>2016-09-11T15:37:20.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://scarletsky.github.io/2016/08/20/write-your-own-combine-reducers-in-redux/</loc>
+    
+    <lastmod>2016-08-24T03:42:22.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://scarletsky.github.io/2016/07/29/use-gitlab-ci-for-continuous-integration/</loc>
+    
+    <lastmod>2016-07-30T06:05:14.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://scarletsky.github.io/2016/07/16/non-determinism-value-and-list-monad-in-haskell/</loc>
+    
+    <lastmod>2016-07-16T16:11:07.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://scarletsky.github.io/2016/02/06/random-numbers-in-haskell/</loc>
+    
+    <lastmod>2016-07-16T12:15:46.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://scarletsky.github.io/2016/03/07/what-is-applicative-in-haskell/</loc>
+    
+    <lastmod>2016-07-16T12:15:35.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://scarletsky.github.io/2016/03/15/type-vs-data-vs-newtype-in-haskell/</loc>
+    
+    <lastmod>2016-07-16T12:15:32.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://scarletsky.github.io/2016/07/03/download-file-using-javascript/</loc>
+    
+    <lastmod>2016-07-03T10:43:31.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://scarletsky.github.io/2016/07/01/basics-node-js-streams/</loc>
+    
+    <lastmod>2016-07-02T13:51:47.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://scarletsky.github.io/2016/06/18/issues-when-upgrading-gitlab/</loc>
+    
+    <lastmod>2016-06-20T02:53:34.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://scarletsky.github.io/2016/06/12/mapreduce-in-mongodb/</loc>
+    
+    <lastmod>2016-06-12T06:57:16.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://scarletsky.github.io/2016/05/02/write-your-own-hubot-scripts/</loc>
+    
+    <lastmod>2016-05-10T05:04:19.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://scarletsky.github.io/2016/04/20/how-to-implement-infinite-scroll/</loc>
+    
+    <lastmod>2016-04-20T09:18:35.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://scarletsky.github.io/2015/12/02/the-little-javascript-closures/</loc>
+    
+    <lastmod>2016-04-06T02:15:40.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://scarletsky.github.io/2016/04/03/hubot-simple-usage/</loc>
+    
+    <lastmod>2016-04-02T16:16:58.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://scarletsky.github.io/2016/04/02/assign-vs-extend-vs-merge-in-lodash/</loc>
+    
+    <lastmod>2016-04-02T05:17:35.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://scarletsky.github.io/2016/02/09/what-is-functor-in-haskell/</loc>
+    
+    <lastmod>2016-03-01T06:52:13.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://scarletsky.github.io/2015/08/19/commonjs-learning/</loc>
+    
+    <lastmod>2016-02-29T04:38:24.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://scarletsky.github.io/2015/08/14/use-gulp-for-front-end-workflow/</loc>
+    
+    <lastmod>2016-02-29T04:38:13.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://scarletsky.github.io/2015/08/11/mongo-shell-trap/</loc>
+    
+    <lastmod>2016-02-29T04:38:02.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://scarletsky.github.io/2015/08/07/interview-summary/</loc>
+    
+    <lastmod>2016-02-29T04:37:54.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://scarletsky.github.io/2015/07/05/android-support-design-library-experience/</loc>
+    
+    <lastmod>2016-02-29T04:37:44.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://scarletsky.github.io/2015/06/29/recyclerview-basic-usage/</loc>
+    
+    <lastmod>2016-02-29T04:37:29.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://scarletsky.github.io/2015/03/15/html5-canvas-tricks/</loc>
+    
+    <lastmod>2016-02-29T04:37:14.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://scarletsky.github.io/2015/01/26/javascript-tricks/</loc>
+    
+    <lastmod>2016-02-29T04:36:57.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://scarletsky.github.io/2015/01/13/html5-drag-and-drop-api/</loc>
+    
+    <lastmod>2016-02-29T04:36:45.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://scarletsky.github.io/2015/01/04/d3js-learning-2/</loc>
+    
+    <lastmod>2016-02-29T04:36:33.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://scarletsky.github.io/2014/12/29/d3js-learning-1/</loc>
+    
+    <lastmod>2016-02-29T04:36:09.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://scarletsky.github.io/2014/10/25/mongodb-security-and-auth/</loc>
+    
+    <lastmod>2016-02-29T04:35:48.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://scarletsky.github.io/2014/10/16/the-digest-loop-and-apply/</loc>
+    
+    <lastmod>2016-02-29T04:35:34.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://scarletsky.github.io/2015/01/27/javascript-upload-slice-file-using-blob/</loc>
+    
+    <lastmod>2016-02-29T04:35:16.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://scarletsky.github.io/2015/08/18/Object-learning-in-javascript/</loc>
+    
+    <lastmod>2016-02-29T04:34:46.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://scarletsky.github.io/2015/10/22/node-stream-api-learning/</loc>
+    
+    <lastmod>2016-02-29T04:34:05.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://scarletsky.github.io/2015/10/25/birthday-summary/</loc>
+    
+    <lastmod>2016-02-29T04:33:49.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://scarletsky.github.io/2015/11/17/react-dnd-usage/</loc>
+    
+    <lastmod>2016-02-29T04:29:36.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://scarletsky.github.io/2016/01/17/localtunnel-usage/</loc>
+    
+    <lastmod>2016-02-29T04:29:03.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://scarletsky.github.io/2016/01/23/simple-flexbox/</loc>
+    
+    <lastmod>2016-02-29T04:28:27.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://scarletsky.github.io/2016/01/30/nodejs-process-excel/</loc>
+    
+    <lastmod>2016-02-29T04:28:16.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://scarletsky.github.io/2014/10/16/mongodb-operation-and-maintenance-basic/</loc>
+    
+    <lastmod>2016-02-29T04:26:58.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://scarletsky.github.io/2016/02/28/flexible-instances-vs-type-synonym-instances-in-haskell/</loc>
+    
+    <lastmod>2016-02-29T04:22:08.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://scarletsky.github.io/about/index.html</loc>
+    
+    <lastmod>2016-02-28T12:53:30.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://scarletsky.github.io/tag/index.html</loc>
+    
+    <lastmod>2016-02-28T12:52:56.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://scarletsky.github.io/category/index.html</loc>
+    
+    <lastmod>2016-02-28T12:52:27.000Z</lastmod>
+    
+  </url>
+  
+</urlset>
